@@ -1,5 +1,5 @@
-let w = 600 / 2;
-let h = 400 / 2;
+let w = 600;
+let h = 400;
 //      GAME STATES
 let atMainMenu = true;
 let isPaused = false;
