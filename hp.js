@@ -1,9 +1,7 @@
 class Health
 {
-  constructor(x, y)
+  constructor()
   {
-    this.x  = x;
-    this.y  = y;
     
     this.hp = 100;
     this.prevHp = this.hp;
@@ -25,7 +23,7 @@ class Health
     fill(lerpColor(this.cEmpty, this.cMax, this.prevHp / 100));
     
     let canvasScale = scaleToCanvas(true);  
-    translate(this.x, this.y);
+    translate(w/2, h*0.93);
     rect(0, 0, (this.prevHp)*1.3 * canvasScale, h*0.025, 3)
     
     

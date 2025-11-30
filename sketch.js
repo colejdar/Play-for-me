@@ -1,5 +1,5 @@
-let w = 600 / 2;
-let h = 400 / 2;
+let w;
+let h;
 //      GAME STATES
 let atMainMenu = true;
 let isPaused = false;
@@ -191,25 +191,46 @@ function preload() {
     displayImg = [loadImage('assets/art/menus/options/display_off.png'), loadImage('assets/art/menus/options/display_on.png')];
     for (let j = 1; j < 8; j++)
     {
-      print(j);
       append(gameOverImg, loadImage('assets/art/menus/game_over/000' + j + '.png'));
     }
 
 }
 
 function setup() {
-  createCanvas(w, h);
+   
+  createCanvas(windowWidth*0.81, windowHeight*0.54);
   textAlign(CENTER);
   imageMode(CENTER);
-  angleMode(DEGREES);
+  angleMode(DEGREES); 
+
+  w = width; // adapts w variable to match canvas width
+  h = height; // adapts h variable to match canvas height
+  
+  health = new Health();
+
+  hpRef = health.hp; // stores initial player health
+
+  createCanvas(windowWidth*0.81, windowWidth*0.54);
+  textAlign(CENTER);
+  imageMode(CENTER);
+  angleMode(DEGREES); 
+
+  w = width; // adapts w variable to match canvas width
+  h = height; // adapts h variable to match canvas height
   
   health = new Health(w*0.5,h*0.93);
 
-  hpRef = health.hp;
+  hpRef = health.hp; // stores initial player health
   
 }
 
 function draw() {
+
+  if (!isPaused) { adjustCanvas(); } // rescales canvas according to host window;
+  adjustCanvas(); // rescales canvas according to host window;
+  w = width; // adapts w variable to match canvas width
+  h = height; // adapts h variable to match canvas height
+
   if (atMainMenu) // Main Menu -----------------------------
   {
     push();
@@ -274,14 +295,13 @@ function mousePressed()
     let x = mouseX / w;
     let y = mouseY / h;
 
-    let diffLeftBounds = [1.525, 0.65, 1.6475, 0.7775];
-    let diffRightBounds = [1.773, 0.6475, 1.862, 0.7775];
+    let diffLeftBounds = [1.525 / 2, 0.65 / 2, 1.6475  /2, 0.7775 / 2];
+    let diffRightBounds = [1.773 / 2, 0.6475 / 2, 1.862 / 2, 0.7775 / 2];
 
-    let deafOnBounds = [1.513, 1.05, 1.683, 1.1825];
-    let deafOffBounds = [1.683, 1.1825, 1.850, 1.05];
-
-    let displayOnBounds = [1.512, 1.5, 1.680, 1.6325];
-    let displayOffBounds = [1.680, 1.6325, 1.847, 1.4975];
+    let deafOnBounds = [1.513 / 2, 1.05 / 2, 1.683 / 2, 1.1825 / 2];
+    let deafOffBounds = [1.683 / 2, 1.1825 / 2, 1.850 / 2, 1.05 / 2];
+    let displayOnBounds = [1.512 / 2, 1.5 / 2, 1.680 / 2, 1.6325 / 2];
+    let displayOffBounds = [1.680 / 2, 1.6325 / 2, 1.847 / 2, 1.4975 / 2];
 
     if (x > diffLeftBounds[0] && y > diffLeftBounds[1] && x < diffLeftBounds[2] && y < diffLeftBounds[3]) //Difficulty Slide Left
     {
@@ -351,6 +371,7 @@ function keyPressed() {
       if (atMainMenu && !inOptions) { gameStart(); } else 
       if (isOver) { atMainMenu = true; }
       break;
+
   }
 
   // sound related stuff  ---------------------------------------------------------------------------------------
@@ -369,6 +390,7 @@ function keyPressed() {
   }
 
 
+  if (key == " ") { return false; } //prevents space from scrolling the page
   // end sound related stuff ---------------------------------------------------------------------------------------
 }
 
@@ -425,7 +447,6 @@ function bigBad(bbX,bbY,bbS) {
 // if they are, trigger attack animation
   if(damaged){
     bbAttackTrigger = true;
-    console.log('damaged');
   }
 
   if(bbAttackTrigger){ // check if Attack animation triggered
@@ -506,7 +527,8 @@ function levelProgress() {
   stroke(30,0,40);
   strokeWeight(5);
 
-  text(progPercent + '%',w*0.5,h*0.1);
+  if (displayIX == 1) { text(progPercent + '%',w*0.5,h*0.1); }
+  
   pop()
 }
 
@@ -627,8 +649,8 @@ function gamePaused()
   //Called in draw
   push();
 
-  textSize(30);
-  text("PAUSED", w/2, 100);
+  textSize(100 * scaleToCanvas(true));
+  text("PAUSED", w/2, 100 * scaleToCanvas(true));
   
   pop();
 }
@@ -710,16 +732,14 @@ function gameStart()
   projTargets = [];
   projectiles = [];
   
-  let canvasScale = scaleToCanvas(true);
   //Set of for loops makes new instances of the Note class, which is stored inside of the notes variable
   for (let i = 0; i < notesNum; i++)
   {
     let x = map(i, 
                 0, notesNum - 1, 
-                noteGap * canvasScale , w / 2 - (noteGap * 2 * canvasScale));
+                noteGap, w / 2 - (noteGap * 2));
     if (notesNum == 1 ) { x = w / 4 - w / 16; } //Fix for when notesNum is 1.
-    
-    append(notes, new Note(x));
+    append(notes, new Note(x / w));
     append(projTargets, 0);
   }
   
@@ -727,10 +747,10 @@ function gameStart()
   {
     let x = map(i, 
                 0, notesNum - 1, 
-                noteGap * canvasScale, w / 2 - (noteGap * 2 * canvasScale));
+                noteGap, w / 2 - (noteGap * 2));
     if (notesNum == 1 ) { x = w / 4 - w / 16; } //Fix for when notesNum is 1.
 
-    append(notes, new Note(w - x));
+    append(notes, new Note((w - x) / w));
     append(projTargets, 0);
   }
 }
@@ -782,7 +802,7 @@ function moveNotes()
       notes[i].move(-1); //moving down
     }
     
-    if (notes[i].y < dzSize * scaleToCanvas(true) || notes[i].y > h - dzSize * scaleToCanvas(true))
+    if (notes[i].y * h < dzSize * scaleToCanvas(true) || notes[i].y * h > h - dzSize * scaleToCanvas(true))
     {
       health.hurt(0.75 * difficultDmgMod);
       dzActive = true; // this and the following three lines of code switch the magma sprites if the player enters a deadzone
@@ -805,12 +825,12 @@ function projectileCreate()
   } //If theres projectiles on every note, then the function does not run any further.
   if (returnCheck == projTargets.length) { return; }
   
-  let startPos = [-20 * canvasScale, w + 20 * canvasScale];
+  let startPos = [-0.04, (1 + 0.04)];
   let dir =      [1, -1];
   
   let index = int(random(0, 2));
   let x = startPos[index];
-  let y = random(dzSize + (projSize / 2), h - dzSize - (projSize / 2));
+  let y = random(0.15, 0.85);
   let randomSpeed = random(0.8, 1.2);
   let projectileIX = -1;
   let spriteIX = int(random(1,5));
@@ -825,7 +845,8 @@ function projectileCreate()
     }
   }
   
-  append(projectiles, [x, y, randomSpeed, projectileIX, dir[index], spriteIX, 60]);
+  print(y + " " + projectileIX);
+  append(projectiles, [x, y, randomSpeed, projectileIX, dir[index], spriteIX, 90 * difficultDmgMod]);
 }
 
 function projectileMove()
@@ -837,13 +858,13 @@ function projectileMove()
   for (let i = 0; i < projectiles.length; i++)
   {
                         //randSpeed * direction * baseSpeed * canvasScale
-    let totalSpeed = projectiles[i][4] * projectiles[i][2] * projSpeed * canvasScale; //total speed of projectile
+    let totalSpeed = projectiles[i][4] * (projectiles[i][2] / 600) * projSpeed; //total speed of projectile
     let noteIndex = projectiles[i][3]; 
     
     let spriteList = [];
     let spriteFrameRate = 4;
     
-    let distance = dist(projectiles[i][0], projectiles[i][1], notes[noteIndex].x, notes[noteIndex].y); //distance between targetted note and projectile
+    let distance = dist(projectiles[i][0] * w, projectiles[i][1] * h, notes[noteIndex].x * w, notes[noteIndex].y * h); //distance between targetted note and projectile
     
     let opacity = 255;
 
@@ -855,7 +876,7 @@ function projectileMove()
       }
 
       push();
-      translate(projectiles[i][0] + (50 * projectiles[i][4] * canvasScale), projectiles[i][1]);
+      translate((projectiles[i][0] + 0.08 * projectiles[i][4]) * w, projectiles[i][1] * h);
       scale(0.075);
       
 
@@ -864,7 +885,7 @@ function projectileMove()
         tint(255, 255, 255, opacity);
       } else
       {
-        tint(projectileTint[noteIndex], opacity);
+        tint(projectileTint[noteIndex][0], projectileTint[noteIndex][1], projectileTint[noteIndex][2], opacity);
         
       }
       noSmooth();
@@ -884,15 +905,15 @@ function projectileMove()
       
       if (projectiles[i][4] == -1) //Whenever a projectiles passes it's note, it slowly disappears
       { //proj going right
-        if (projectiles[i][0] < notes[noteIndex].x)
+        if (projectiles[i][0] * w < notes[noteIndex].x * w)
         {
-          opacity = 255 - (notes[noteIndex].x - projectiles[i][0]) * 5;
+          opacity = 255 - (notes[noteIndex].x * w - projectiles[i][0] * w) * 5;
         }
       } else
       { //going left
-        if (projectiles[i][0] > notes[noteIndex].x)
+        if (projectiles[i][0] * w > notes[noteIndex].x * w)
         {
-          opacity = 255 - (projectiles[i][0] - notes[noteIndex].x) * 5;
+          opacity = 255 - (projectiles[i][0] * w - notes[noteIndex].x * w) * 5;
         }
       }
       if (opacity < 30)
@@ -902,7 +923,6 @@ function projectileMove()
         break; 
       }
       push();
-      fill(255, 255, 255, opacity); //Projectile fill color
     
       switch (projectiles[i][5])
       {
@@ -924,7 +944,8 @@ function projectileMove()
       {
         noteIndex = noteSprite.length - notesNum - (notesNum - noteIndex);
       }
-      translate(projectiles[i][0], projectiles[i][1] + 3 * sin(frameCount * 3));
+
+      translate(projectiles[i][0] * w, projectiles[i][1] * h + (3 * sin(frameCount * 3) * canvasScale));
       scale(0.075);
       
       if (deafModeIX == 1)
@@ -933,7 +954,7 @@ function projectileMove()
 
       } else
       {
-        tint(projectileTint[noteIndex], opacity);
+        tint(projectileTint[noteIndex][0], projectileTint[noteIndex][1], projectileTint[noteIndex][2], opacity);
 
       }
       scale(scaleToCanvas());
@@ -947,10 +968,10 @@ function projectileMove()
         i--;
         break;
       }
-      print(canvasScale);
-      if (projectiles[i][0] < (-20 * canvasScale) || projectiles[i][0] > w + (20 * canvasScale))
+      if (projectiles[i][0] * w < (-30 * canvasScale) || projectiles[i][0] * w  > w + (30 * canvasScale))
       {
         projectileDelete(i, false);
+        print("projectile out of bounds deleted");
         i--;
         break;
       }
@@ -1010,4 +1031,8 @@ function getKeyAtIndex(i, isKey)
   }
   return controlList[controlState][cIndx];
   
+}
+
+function adjustCanvas() { // dynamically adjusts canvas size based on window size
+  resizeCanvas(windowWidth*0.81, windowWidth*0.54);
 }
