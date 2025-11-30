@@ -198,7 +198,9 @@ function preload() {
 
 function setup() {
    
-  createCanvas(windowWidth*0.81, windowHeight*0.54);
+  let canvas = createCanvas(windowWidth*0.81, windowWidth*0.54);
+  canvas.parent("holder-canvas");
+
   textAlign(CENTER);
   imageMode(CENTER);
   angleMode(DEGREES); 
@@ -209,19 +211,6 @@ function setup() {
   health = new Health();
 
   hpRef = health.hp; // stores initial player health
-
-  createCanvas(windowWidth*0.81, windowWidth*0.54);
-  textAlign(CENTER);
-  imageMode(CENTER);
-  angleMode(DEGREES); 
-
-  w = width; // adapts w variable to match canvas width
-  h = height; // adapts h variable to match canvas height
-  
-  health = new Health(w*0.5,h*0.93);
-
-  hpRef = health.hp; // stores initial player health
-  
 }
 
 function draw() {

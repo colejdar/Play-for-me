@@ -5,5 +5,28 @@ html, body {
 }
 canvas {
   display: block;
-  margin: auto;
+  margin-top: 10em;
+  margin: 1.5% auto auto;
+  border-radius: 25px;
 }
+
+p.frame {
+font-size: 1.5em;
+text-align: center;
+color: rgb(238, 169, 66);
+}
+
+div.lore {
+width: 50%;
+margin: 5% auto auto;
+}
+
+p.lore {
+font-size: 1.5em;
+text-align: left;
+padding-left: 4em;
+padding-right: 4em;
+color: rgb(238, 169, 66);
+}
+
+
