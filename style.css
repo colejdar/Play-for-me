@@ -6,6 +6,4 @@ html, body {
 canvas {
   display: block;
   margin: auto;
-  scale: 200%;
-  margin-top: 20em;
 }
