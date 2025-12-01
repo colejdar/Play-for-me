@@ -28,3 +28,19 @@ padding-left: 4em;
 padding-right: 4em;
 color: rgb(238, 169, 66);
 }
+
+p.title {
+font-size: 1.5em;
+text-align: center;
+padding-left: 4em;
+padding-right: 4em;
+color: rgb(238, 169, 66);
+}
+
+p.control {
+font-size: 1em;
+text-align: left;
+padding-left: 4em;
+padding-right: 4em;
+color: rgb(208, 139, 36);
+}
