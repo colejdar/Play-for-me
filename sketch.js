@@ -819,7 +819,7 @@ function projectileCreate()
   
   let index = int(random(0, 2));
   let x = startPos[index];
-  let y = random(0.15, 0.85);
+  let y = random(0.25, 0.75);
   let randomSpeed = random(0.8, 1.2);
   let projectileIX = -1;
   let spriteIX = int(random(1,5));
