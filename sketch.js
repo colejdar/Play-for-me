@@ -834,7 +834,6 @@ function projectileCreate()
     }
   }
   
-  print(y + " " + projectileIX);
   append(projectiles, [x, y, randomSpeed, projectileIX, dir[index], spriteIX, 90 * difficultDmgMod]);
 }
 
@@ -960,7 +959,6 @@ function projectileMove()
       if (projectiles[i][0] * w < (-30 * canvasScale) || projectiles[i][0] * w  > w + (30 * canvasScale))
       {
         projectileDelete(i, false);
-        print("projectile out of bounds deleted");
         i--;
         break;
       }
