@@ -6,9 +6,9 @@ html, body {
 canvas {
   display: block;
   margin-top: 10em;
+  margin: 1.5% auto auto;
   border-radius: 25px;
 }
-
 p.frame {
 font-size: 1.5em;
 text-align: center;
