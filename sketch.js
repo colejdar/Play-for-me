@@ -507,7 +507,7 @@ function bigBad(bbX,bbY,bbS) {
 
 function levelProgress() {
  //Increasae or decrease this to change game speed
-  progFrames += 10;
+  progFrames += 100;
 
   progPercent = int(map(progFrames, 0, 20606, 0, 100));
 
